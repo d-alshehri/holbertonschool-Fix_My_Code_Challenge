@@ -38,10 +38,10 @@ int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
     }
     else
     {
-        /* Relink previous and next nodes correctly using tmp */
-        tmp->prev->next = tmp->next;
-        if (tmp->next != NULL)
-            tmp->next->prev = tmp->prev;
+        /* Re-link previous and next nodes in one line each */
+        (*head)->prev->next = (*head)->next;
+        if ((*head)->next != NULL)
+            (*head)->next->prev = (*head)->prev;
     }
 
     free(tmp);
