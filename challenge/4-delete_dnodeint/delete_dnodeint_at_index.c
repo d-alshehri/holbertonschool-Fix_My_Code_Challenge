@@ -3,39 +3,51 @@
 
 /**
  * delete_dnodeint_at_index - Delete a node at a specific index from a list
- * @head: Pointer to pointer to the first element of the list
+ *
+ * @head: A pointer to the first element of a list
  * @index: The index of the node to delete
  *
  * Return: 1 on success, -1 on failure
  */
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
-    dlistint_t *current;
-    unsigned int i;
+	dlistint_t *tmp;
+	unsigned int p;
 
-    if (head == NULL || *head == NULL)
-        return (-1);
+	if (head == NULL || *head == NULL)
+		return (-1);
 
-    current = *head;
+	tmp = *head;
+	p = 0;
 
-    /* Traverse to the node at index */
-    for (i = 0; i < index; i++)
-    {
-        if (current->next == NULL)
-            return (-1); /* index out of bounds */
-        current = current->next;
-    }
+	/* Traverse to the node at index */
+	while (tmp && p < index)
+	{
+		tmp = tmp->next;
+		p++;
+	}
 
-    /* If it's the first node, update head */
-    if (current->prev != NULL)
-        current->prev->next = current->next;
-    else
-        *head = current->next;
+	/* If index is out of range */
+	if (tmp == NULL)
+		return (-1);
 
-    /* Update next node's prev pointer if it exists */
-    if (current->next != NULL)
-        current->next->prev = current->prev;
+	/* Case: deleting the head node */
+	if (tmp->prev == NULL)
+	{
+		*head = tmp->next;
+		if (*head != NULL)
+			(*head)->prev = NULL;
+	}
+	else
+	{
+		/* Relink previous node */
+		tmp->prev->next = tmp->next;
 
-    free(current);
-    return (1);
+		/* Relink next node */
+		if (tmp->next != NULL)
+			tmp->next->prev = tmp->prev;
+	}
+
+	free(tmp);
+	return (1);
 }
